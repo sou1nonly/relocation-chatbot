@@ -2,7 +2,7 @@
 
 /**
  * Vercel Deployment Helper Script
- * 
+ *
  * This script helps ensure your relocation chatbot is properly configured
  * for Vercel deployment by checking environment variables and dependencies.
  */
@@ -19,13 +19,13 @@ const requiredFiles = [
   'vercel.json',
   '.env.example',
   'lib/db/schema.ts',
-  'lib/db/migrate.ts'
+  'lib/db/migrate.ts',
 ];
 
 console.log('📋 Checking required files...');
 let allFilesExist = true;
 
-requiredFiles.forEach(file => {
+requiredFiles.forEach((file) => {
   const exists = fs.existsSync(path.join(__dirname, '..', file));
   console.log(`  ${exists ? '✅' : '❌'} ${file}`);
   if (!exists) allFilesExist = false;
@@ -38,21 +38,25 @@ if (!allFilesExist) {
 
 // Check package.json configuration
 console.log('\n📦 Checking package.json...');
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'),
+);
 
 const requiredScripts = ['build', 'build:production', 'start'];
-requiredScripts.forEach(script => {
+requiredScripts.forEach((script) => {
   const exists = packageJson.scripts?.[script];
   console.log(`  ${exists ? '✅' : '❌'} Script: ${script}`);
 });
 
 // Check for old dependencies that should be removed
 const unnecessaryDeps = ['@ai-sdk/xai', '@pinecone-database/pinecone', 'redis'];
-const cleanDeps = unnecessaryDeps.filter(dep => 
-  !packageJson.dependencies?.[dep]
+const cleanDeps = unnecessaryDeps.filter(
+  (dep) => !packageJson.dependencies?.[dep],
 );
 
-console.log(`  ${cleanDeps.length === unnecessaryDeps.length ? '✅' : '⚠️'} Cleaned up unnecessary dependencies`);
+console.log(
+  `  ${cleanDeps.length === unnecessaryDeps.length ? '✅' : '⚠️'} Cleaned up unnecessary dependencies`,
+);
 
 // Environment variable guide
 console.log('\n🔧 Required Environment Variables:');

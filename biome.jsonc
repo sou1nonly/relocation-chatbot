@@ -5,7 +5,6 @@
     "ignore": [
       "**/pnpm-lock.yaml",
       "lib/db/migrations",
-      "lib/editor/react-renderer.tsx",
       "node_modules",
       ".next",
       "public",

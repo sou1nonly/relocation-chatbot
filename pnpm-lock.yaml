@@ -194,9 +194,6 @@ importers:
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.1
-      resumable-stream:
-        specifier: ^2.0.0
-        version: 2.0.0
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -3547,9 +3544,6 @@ packages:
   resolve@2.0.0-next.5:
     resolution: {integrity: sha512-U7WjGVG9sH8tvjW5SmGbQuui75FiyjAX72HX15DwBBwF9dNiQZRQAg9nnPhYy+TUnE0+VcrttuvNI8oSxZcocA==}
     hasBin: true
-
-  resumable-stream@2.0.0:
-    resolution: {integrity: sha512-D7E0wDUnfoy+Lerba/gyuD44OG3G0APqDcQ9soMSerujaVujPLWc5sSCLXf/ZFQPreLb3MKDjSm3TOPXpNtpZw==}
 
   retry@0.13.1:
     resolution: {integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==}
@@ -7482,8 +7476,6 @@ snapshots:
       is-core-module: 2.16.1
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
-
-  resumable-stream@2.0.0: {}
 
   retry@0.13.1: {}
 

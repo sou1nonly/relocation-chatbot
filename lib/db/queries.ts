@@ -27,6 +27,7 @@ import {
   type DBMessage,
   type Chat,
   stream,
+  userMemory,
 } from './schema';
 import type { ArtifactKind } from '@/components/artifact';
 import { generateUUID } from '../utils';
@@ -532,6 +533,82 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
     throw new ChatSDKError(
       'bad_request:database',
       'Failed to get stream ids by chat id',
+    );
+  }
+}
+
+// ===== USER MEMORY FUNCTIONS =====
+
+export async function saveUserMemory({
+  userId,
+  key,
+  value,
+}: {
+  userId: string;
+  key: string;
+  value: any;
+}) {
+  try {
+    // First try to update existing record
+    const existingMemory = await db
+      .select()
+      .from(userMemory)
+      .where(and(eq(userMemory.userId, userId), eq(userMemory.key, key)));
+
+    if (existingMemory.length > 0) {
+      // Update existing
+      await db
+        .update(userMemory)
+        .set({
+          value,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(userMemory.userId, userId), eq(userMemory.key, key)));
+    } else {
+      // Insert new
+      await db.insert(userMemory).values({
+        userId,
+        key,
+        value,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to save user memory',
+    );
+  }
+}
+
+export async function getUserMemory({
+  userId,
+  key,
+}: {
+  userId: string;
+  key: string;
+}) {
+  try {
+    const memoryRecord = await db
+      .select()
+      .from(userMemory)
+      .where(and(eq(userMemory.userId, userId), eq(userMemory.key, key)))
+      .limit(1);
+
+    return memoryRecord.length > 0 ? memoryRecord[0] : null;
+  } catch (error) {
+    throw new ChatSDKError('bad_request:database', 'Failed to get user memory');
+  }
+}
+
+export async function deleteUserMemory({ userId }: { userId: string }) {
+  try {
+    await db.delete(userMemory).where(eq(userMemory.userId, userId));
+  } catch (error) {
+    throw new ChatSDKError(
+      'bad_request:database',
+      'Failed to delete user memory',
     );
   }
 }

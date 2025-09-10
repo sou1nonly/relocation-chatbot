@@ -1,0 +1,12 @@
+{
+  "buildCommand": "pnpm build:production",
+  "installCommand": "pnpm install",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}

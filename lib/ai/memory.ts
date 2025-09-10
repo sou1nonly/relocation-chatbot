@@ -1,4 +1,4 @@
-import { xai } from '@ai-sdk/xai';
+import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
 export interface ConversationSummary {
@@ -101,7 +101,7 @@ Provide a structured summary focusing on actionable relocation insights:`;
 
   try {
     const { text } = await generateText({
-      model: xai('grok-beta'), // Switch to XAI for higher rate limits
+      model: google('gemini-1.5-flash'), // Using Gemini for memory processing
       prompt: enhancedSummarizationPrompt,
       temperature: 0.1,
     });
@@ -350,7 +350,7 @@ Return only valid JSON:`;
 
   try {
     const { text } = await generateText({
-      model: xai('grok-beta'), // Switch to XAI for higher rate limits
+      model: google('gemini-1.5-flash'), // Using Gemini for memory processing
       prompt: extractionPrompt,
       temperature: 0.1,
     });
@@ -412,7 +412,7 @@ Now provide a better response that acknowledges their previous context and prefe
 
   try {
     const { text } = await generateText({
-      model: xai('grok-beta'), // Switch to XAI for higher rate limits
+      model: google('gemini-1.5-flash'), // Using Gemini for memory processing
       prompt: repairPrompt,
       temperature: 0.3,
     });

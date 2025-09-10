@@ -1,62 +1,241 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+<div align="center">
+  <h1>🏙️ AI Relocation Assistant</h1>
+  <p>An intelligent chatbot that helps people find the perfect place to live</p>
+</div>
 
 <p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
-
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
+  <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
+  <a href="#getting-started"><strong>Getting Started</strong></a> ·
+  <a href="#configuration"><strong>Configuration</strong></a> ·
+  <a href="#deployment"><strong>Deployment</strong></a>
 </p>
+
 <br/>
 
-## Features
+## 🎯 About
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+This AI-powered relocation assistant helps users make informed decisions about where to live by providing:
 
-## Model Providers
+- **Personalized city recommendations** based on individual preferences
+- **Real-time information** about housing markets, weather, and local news
+- **Intelligent memory system** that learns and remembers user preferences
+- **Cost-effective local vector search** for city knowledge without expensive external services
+- **Context-aware conversations** that improve over time
 
-This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+<br/>
 
-## Deploy Your Own
+## ✨ Features
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+### 🧠 Intelligent Conversation
+- **Google Gemini 1.5 Flash** integration for natural, context-aware responses
+- **Memory system** that remembers user preferences across sessions
+- **Conversation summaries** for long-term context retention
+- **Adaptive responses** based on user interaction patterns
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Learn+more+about+how+to+get+the+API+Keys+for+the+application&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&demo-title=AI+Chatbot&demo-description=An+Open-Source+AI+Chatbot+Template+Built+With+Next.js+and+the+AI+SDK+by+Vercel.&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22upstash-kv%22%2C%22integrationSlug%22%3A%22upstash%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+### 🔍 Smart Knowledge System
+- **Local vector search** - Cost-effective alternative to expensive services like Pinecone
+- **City knowledge database** with embedding-based similarity search
+- **Real-time web search** for current housing markets and city information
+- **Weather integration** for location-specific climate data
 
-## Running locally
+### 🎯 Relocation-Focused Tools
+- **Personalized city recommendations** based on career, lifestyle, and budget
+- **Neighborhood comparisons** with detailed analysis
+- **Cost of living calculations** and budget planning
+- **Real-time housing market data** via web search
+- **Climate and weather information** for decision-making
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+### 🔧 Technical Excellence
+- **Next.js 15** with App Router and Turbopack for optimal performance
+- **PostgreSQL** with Neon for reliable data persistence
+- **Auth.js** for secure user authentication
+- **shadcn/ui** with Tailwind CSS for modern, responsive design
+- **TypeScript** for type-safe development
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
+## 🛠️ Tech Stack
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+### AI & Machine Learning
+- **[Google Gemini 1.5 Flash](https://ai.google.dev/)** - Primary language model for conversations
+- **Local Vector Search** - Hash-based embeddings for cost-effective similarity search
+- **Memory System** - Intelligent conversation context and user preference tracking
 
-```bash
-pnpm install
-pnpm dev
+### Backend & Database
+- **[Next.js 15](https://nextjs.org)** - React framework with App Router and Server Components
+- **[PostgreSQL](https://www.postgresql.org/)** via [Neon](https://neon.tech/) - Serverless database for data persistence
+- **[Drizzle ORM](https://orm.drizzle.team/)** - Type-safe database operations
+- **[Auth.js](https://authjs.dev)** - Authentication and session management
+
+### External APIs
+- **[Serper API](https://serper.dev/)** - Real-time web search for current information
+- **[Open-Meteo API](https://open-meteo.com/)** - Weather data for location analysis
+
+### Frontend & UI
+- **[React 18](https://react.dev/)** with Server Components
+- **[Tailwind CSS](https://tailwindcss.com)** - Utility-first styling
+- **[shadcn/ui](https://ui.shadcn.com)** - Beautiful, accessible components
+- **[Radix UI](https://radix-ui.com)** - Headless component primitives
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js 18+** and **pnpm** (recommended)
+- **PostgreSQL database** (we recommend [Neon](https://neon.tech/) for serverless)
+- **Google AI API key** for Gemini 1.5 Flash
+- **Serper API key** for web search (optional but recommended)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd relocation-chatbot
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+
+4. **Configure your `.env` file** (see [Configuration](#configuration) section)
+
+5. **Run database migrations**
+   ```bash
+   pnpm drizzle-kit generate
+   pnpm drizzle-kit push
+   ```
+
+6. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
+
+The application will be available at `http://localhost:3000`.
+
+## ⚙️ Configuration
+
+Create a `.env` file in the root directory with the following variables:
+
+### Required Variables
+
+```env
+# Authentication Secret (generate with: openssl rand -base64 32)
+AUTH_SECRET=your_random_secret_here
+
+# Google AI API Key for Gemini models
+# Get yours at: https://aistudio.google.com/app/apikey
+GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_key
+
+# PostgreSQL Database URL
+# Use Neon (https://neon.tech/) for serverless PostgreSQL
+POSTGRES_URL=postgresql://user:password@host:port/database
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+### Optional Variables
+
+```env
+# Web Search API Key (recommended for real-time information)
+# Get yours at: https://serper.dev/ (2,500 free searches/month)
+SERPER_API_KEY=your_serper_key
+
+# File Storage (if you plan to add file upload features)
+BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
+```
+
+### API Key Setup Guide
+
+1. **Google AI API Key**:
+   - Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
+   - Create a new project or select existing
+   - Generate an API key
+   - Enable the Generative AI API
+
+2. **Serper API Key** (Optional):
+   - Sign up at [Serper.dev](https://serper.dev/)
+   - Get your free API key (2,500 searches/month)
+
+3. **Database Setup**:
+   - Create a free database at [Neon](https://neon.tech/)
+   - Copy the connection string to `POSTGRES_URL`
+
+## 🚀 Deployment
+
+### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/sou1nonly/relocation-chatbot&env=AUTH_SECRET,GOOGLE_GENERATIVE_AI_API_KEY,POSTGRES_URL&envDescription=Required%20environment%20variables%20for%20the%20relocation%20chatbot)
+
+### Manual Deployment
+
+1. **Connect your repository** to Vercel
+2. **Set environment variables** in Vercel dashboard
+3. **Deploy** - Vercel will automatically build and deploy
+
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+### Deploy to Other Platforms
+
+This is a standard Next.js application and can be deployed to:
+- **Railway**
+- **Render** 
+- **AWS**
+- **Google Cloud**
+- Any platform supporting Node.js applications
+
+## 🔧 Development
+
+### Running Tests
+```bash
+pnpm test
+```
+
+### Database Operations
+```bash
+# Generate migrations
+pnpm db:generate
+
+# Push changes to database
+pnpm db:push
+
+# Open Drizzle Studio
+pnpm db:studio
+```
+
+### Code Quality
+```bash
+# Lint and format
+pnpm lint:fix
+pnpm format
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🆘 Support
+
+If you encounter any issues:
+1. Check the [Issues](https://github.com/sou1nonly/relocation-chatbot/issues) page
+2. Create a new issue with detailed information
+3. Include error messages and system information
+
+---
+
+<div align="center">
+  <strong>Built with ❤️ for helping people find their perfect home</strong>
+</div>

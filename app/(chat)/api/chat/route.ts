@@ -29,12 +29,9 @@ import {
 } from '@/lib/db/queries';
 import { convertToUIMessages, generateUUID } from '@/lib/utils';
 import { generateTitleFromUserMessage } from '../../actions';
-import { createDocument } from '@/lib/ai/tools/create-document';
-import { updateDocument } from '@/lib/ai/tools/update-document';
-import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
 import { webSearch } from '@/lib/ai/tools/web-search';
-import { vectorSearch } from '@/lib/ai/tools/vector-search';
+import { localVectorSearch } from '@/lib/ai/tools/local-vector-search';
 import { isProductionEnvironment } from '@/lib/constants';
 import { myProvider } from '@/lib/ai/providers';
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
@@ -202,11 +199,8 @@ export async function POST(request: Request) {
             ? []
             : [
                 'getWeather' as const,
+                'localVectorSearch' as const,
                 ...(shouldUseWebSearch ? ['webSearch' as const] : []),
-                'vectorSearch' as const,
-                'createDocument' as const,
-                'updateDocument' as const,
-                'requestSuggestions' as const,
               ];
 
         const result = streamText({
@@ -222,13 +216,7 @@ export async function POST(request: Request) {
           tools: {
             getWeather,
             webSearch,
-            vectorSearch,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-            }),
+            localVectorSearch,
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,

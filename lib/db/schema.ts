@@ -168,3 +168,26 @@ export const stream = pgTable(
 );
 
 export type Stream = InferSelectModel<typeof stream>;
+
+export const userMemory = pgTable('UserMemory', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => user.id),
+  key: varchar('key', { length: 255 }).notNull(),
+  value: json('value').notNull(),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+});
+
+export type UserMemory = InferSelectModel<typeof userMemory>;
+
+export const cityKnowledge = pgTable('CityKnowledge', {
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
+  content: text('content').notNull(),
+  metadata: json('metadata').notNull(),
+  embedding: json('embedding').notNull(), // Store embedding vectors as JSON
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+});
+
+export type CityKnowledge = InferSelectModel<typeof cityKnowledge>;

@@ -1,0 +1,1 @@
+ALTER TABLE "UserMemory" DROP CONSTRAINT "UserMemory_userId_memoryType_key_pk";

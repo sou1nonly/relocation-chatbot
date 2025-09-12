@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Brain, MessageSquare, Clock, Tag, MapPin } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Brain,
+  MessageSquare,
+  Tag,
+  MapPin,
+  Edit2,
+  Save,
+  X,
+  Plus,
+} from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -28,17 +39,146 @@ interface MemoryData {
 interface MemoryViewerProps {
   memoryData?: MemoryData;
   isLoading?: boolean;
+  onMemoryUpdate?: () => void;
 }
 
-export function MemoryViewer({ memoryData, isLoading }: MemoryViewerProps) {
-  const [isOpen, setIsOpen] = useState(false);
+interface AddItemButtonProps {
+  onAdd: (value: string) => void;
+  placeholder: string;
+}
 
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleString();
-    } catch {
-      return 'Unknown';
+function AddItemButton({ onAdd, placeholder }: AddItemButtonProps) {
+  const [value, setValue] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAdd = () => {
+    if (value.trim()) {
+      onAdd(value.trim());
+      setValue('');
+      setIsAdding(false);
     }
+  };
+
+  if (isAdding) {
+    return (
+      <div className="flex gap-1">
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={placeholder}
+          className="h-7 text-xs"
+          onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
+          autoFocus
+        />
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={handleAdd}
+          className="h-7 w-7 p-0"
+        >
+          <Save className="h-3 w-3" />
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          onClick={() => setIsAdding(false)}
+          className="h-7 w-7 p-0"
+        >
+          <X className="h-3 w-3" />
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      size="sm"
+      variant="ghost"
+      onClick={() => setIsAdding(true)}
+      className="h-7 w-7 p-0"
+    >
+      <Plus className="h-3 w-3" />
+    </Button>
+  );
+}
+
+export function MemoryViewer({
+  memoryData,
+  isLoading,
+  onMemoryUpdate,
+}: MemoryViewerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editedData, setEditedData] = useState<MemoryData | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleEditStart = () => {
+    setEditedData(memoryData ? { ...memoryData } : null);
+    setEditMode(true);
+  };
+
+  const handleEditCancel = () => {
+    setEditedData(null);
+    setEditMode(false);
+  };
+
+  const handleSave = async () => {
+    if (!editedData) return;
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch('/api/memory', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editedData),
+      });
+
+      if (response.ok) {
+        setEditMode(false);
+        onMemoryUpdate?.(); // Call the callback to refresh memory data
+      }
+    } catch (error) {
+      console.error('Failed to update memory:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteItem = async (type: string, index: number) => {
+    if (!editedData) return;
+
+    const newData = { ...editedData };
+
+    if (type === 'keyTopics') {
+      newData.keyTopics = newData.keyTopics.filter((_, i) => i !== index);
+    } else if (type === 'locationContext') {
+      newData.locationContext = newData.locationContext.filter(
+        (_, i) => i !== index,
+      );
+    } else if (type === 'urgentQueries') {
+      newData.urgentQueries = newData.urgentQueries.filter(
+        (_, i) => i !== index,
+      );
+    }
+
+    setEditedData(newData);
+  };
+
+  const addNewItem = (type: string, value: string) => {
+    if (!editedData || !value.trim()) return;
+
+    const newData = { ...editedData };
+
+    if (type === 'keyTopics') {
+      newData.keyTopics = [...newData.keyTopics, value.trim()];
+    } else if (type === 'locationContext') {
+      newData.locationContext = [...newData.locationContext, value.trim()];
+    }
+
+    setEditedData(newData);
   };
 
   return (
@@ -56,13 +196,44 @@ export function MemoryViewer({ memoryData, isLoading }: MemoryViewerProps) {
       </SheetTrigger>
       <SheetContent side="right" className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5" />
-            Conversation Memory
-          </SheetTitle>
-          <SheetDescription>
-            Smart context and preferences learned from our conversation
-          </SheetDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <SheetTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5" />
+                Conversation Memory
+              </SheetTitle>
+              <SheetDescription>
+                Smart context and preferences learned from our conversation
+              </SheetDescription>
+            </div>
+            {memoryData && !isLoading && (
+              <div className="flex gap-2">
+                {editMode ? (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleEditCancel}
+                      disabled={isUpdating}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={isUpdating}
+                    >
+                      <Save className="h-4 w-4" />
+                    </Button>
+                  </>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={handleEditStart}>
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
@@ -75,32 +246,71 @@ export function MemoryViewer({ memoryData, isLoading }: MemoryViewerProps) {
           ) : memoryData ? (
             <>
               {/* Summary */}
-              {memoryData.summary && (
-                <div className="space-y-2">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4" />
-                    Conversation Summary
-                  </h3>
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  Conversation Summary
+                </h3>
+                {editMode ? (
+                  <Textarea
+                    value={editedData?.summary || ''}
+                    onChange={(e) =>
+                      setEditedData((prev) =>
+                        prev ? { ...prev, summary: e.target.value } : null,
+                      )
+                    }
+                    className="text-sm leading-relaxed min-h-[100px]"
+                    placeholder="Enter conversation summary..."
+                  />
+                ) : (
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {memoryData.summary}
+                    {memoryData.summary ||
+                      'No summary available yet. Click edit to add one.'}
                   </p>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Key Topics */}
-              {memoryData.keyTopics && memoryData.keyTopics.length > 0 && (
+              {(() => {
+                const topics = editMode
+                  ? editedData?.keyTopics
+                  : memoryData.keyTopics;
+                return (topics && topics.length > 0) || editMode;
+              })() && (
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold flex items-center gap-2">
-                    <Tag className="h-4 w-4" />
-                    Key Topics
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold flex items-center gap-2">
+                      <Tag className="h-4 w-4" />
+                      Key Topics
+                    </h3>
+                    {editMode && (
+                      <AddItemButton
+                        onAdd={(value: string) =>
+                          addNewItem('keyTopics', value)
+                        }
+                        placeholder="Add topic"
+                      />
+                    )}
+                  </div>
                   <div className="flex flex-wrap gap-2">
-                    {memoryData.keyTopics.map((topic) => (
+                    {(editMode
+                      ? editedData?.keyTopics
+                      : memoryData.keyTopics
+                    )?.map((topic, index) => (
                       <span
-                        key={`topic-${topic}`}
-                        className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-secondary text-secondary-foreground"
+                        key={`topic-${topic.replace(/\s+/g, '-')}-${Date.now()}-${index}`}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-secondary text-secondary-foreground group"
                       >
                         {topic}
+                        {editMode && (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteItem('keyTopics', index)}
+                            className="ml-1 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        )}
                       </span>
                     ))}
                   </div>
@@ -108,100 +318,190 @@ export function MemoryViewer({ memoryData, isLoading }: MemoryViewerProps) {
               )}
 
               {/* Location Context */}
-              {memoryData.locationContext &&
-                memoryData.locationContext.length > 0 && (
-                  <div className="space-y-2">
+              {(() => {
+                const locations = editMode
+                  ? editedData?.locationContext
+                  : memoryData.locationContext;
+                return (locations && locations.length > 0) || editMode;
+              })() && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
                       Discussed Locations
                     </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {memoryData.locationContext.map((location) => (
-                        <span
-                          key={`location-${location}`}
-                          className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
-                        >
-                          {location}
-                        </span>
-                      ))}
-                    </div>
+                    {editMode && (
+                      <AddItemButton
+                        onAdd={(value: string) =>
+                          addNewItem('locationContext', value)
+                        }
+                        placeholder="Add location"
+                      />
+                    )}
                   </div>
-                )}
+                  <div className="flex flex-wrap gap-2">
+                    {(editMode
+                      ? editedData?.locationContext
+                      : memoryData.locationContext
+                    )?.map((location, index) => (
+                      <span
+                        key={`location-${location.replace(/\s+/g, '-')}-${Date.now()}-${index}`}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 group"
+                      >
+                        {location}
+                        {editMode && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDeleteItem('locationContext', index)
+                            }
+                            className="ml-1 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* User Preferences */}
-              {memoryData.userPreferences && (
+              {((editMode
+                ? editedData?.userPreferences
+                : memoryData.userPreferences) ||
+                editMode) && (
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold">User Preferences</h3>
                   <div className="space-y-2 text-sm">
-                    {memoryData.userPreferences.careerField && (
-                      <div>
-                        <span className="font-medium">Career: </span>
+                    {/* Career Field */}
+                    <div>
+                      <span className="font-medium">Career: </span>
+                      {editMode ? (
+                        <Input
+                          value={editedData?.userPreferences?.careerField || ''}
+                          onChange={(e) =>
+                            setEditedData((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    userPreferences: {
+                                      ...prev.userPreferences,
+                                      careerField: e.target.value,
+                                    },
+                                  }
+                                : null,
+                            )
+                          }
+                          placeholder="Enter career field"
+                          className="inline-flex h-6 text-xs w-40"
+                        />
+                      ) : (
                         <span className="text-muted-foreground">
-                          {memoryData.userPreferences.careerField}
+                          {memoryData.userPreferences?.careerField ||
+                            'Not specified'}
                         </span>
-                      </div>
-                    )}
-                    {memoryData.userPreferences.workSetup && (
-                      <div>
-                        <span className="font-medium">Work Setup: </span>
+                      )}
+                    </div>
+                    {/* Work Setup */}
+                    <div>
+                      <span className="font-medium">Work Setup: </span>
+                      {editMode ? (
+                        <Input
+                          value={editedData?.userPreferences?.workSetup || ''}
+                          onChange={(e) =>
+                            setEditedData((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    userPreferences: {
+                                      ...prev.userPreferences,
+                                      workSetup: e.target.value,
+                                    },
+                                  }
+                                : null,
+                            )
+                          }
+                          placeholder="Remote/Hybrid/Office"
+                          className="inline-flex h-6 text-xs w-40"
+                        />
+                      ) : (
                         <span className="text-muted-foreground">
-                          {memoryData.userPreferences.workSetup}
+                          {memoryData.userPreferences?.workSetup ||
+                            'Not specified'}
                         </span>
-                      </div>
-                    )}
-                    {memoryData.userPreferences.budget && (
-                      <div>
-                        <span className="font-medium">Budget: </span>
+                      )}
+                    </div>
+                    {/* Budget */}
+                    <div>
+                      <span className="font-medium">Budget: </span>
+                      {editMode ? (
+                        <Input
+                          value={editedData?.userPreferences?.budget || ''}
+                          onChange={(e) =>
+                            setEditedData((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    userPreferences: {
+                                      ...prev.userPreferences,
+                                      budget: e.target.value,
+                                    },
+                                  }
+                                : null,
+                            )
+                          }
+                          placeholder="Budget range"
+                          className="inline-flex h-6 text-xs w-40"
+                        />
+                      ) : (
                         <span className="text-muted-foreground">
-                          {memoryData.userPreferences.budget}
+                          {memoryData.userPreferences?.budget ||
+                            'Not specified'}
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
 
               {/* Urgent Queries */}
-              {memoryData.urgentQueries &&
-                memoryData.urgentQueries.length > 0 && (
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-semibold text-orange-600 dark:text-orange-400">
-                      Recent Priority Questions
-                    </h3>
-                    <div className="space-y-1">
-                      {memoryData.urgentQueries.map((query) => (
-                        <p
-                          key={`urgent-${query.slice(0, 20)}`}
-                          className="text-sm text-muted-foreground bg-orange-50 dark:bg-orange-950 p-2 rounded border-l-2 border-orange-300 dark:border-orange-700"
-                        >
-                          {query}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-              {/* Metadata */}
-              <div className="space-y-2 pt-4 border-t">
-                <h3 className="text-sm font-semibold flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  Memory Stats
-                </h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium">Messages: </span>
-                    <span className="text-muted-foreground">
-                      {memoryData.messageCount}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="font-medium">Updated: </span>
-                    <span className="text-muted-foreground">
-                      {formatDate(memoryData.lastUpdated)}
-                    </span>
+              {(() => {
+                const queries = editMode
+                  ? editedData?.urgentQueries
+                  : memoryData.urgentQueries;
+                return (queries && queries.length > 0) || editMode;
+              })() && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold text-orange-600 dark:text-orange-400">
+                    Recent Priority Questions
+                  </h3>
+                  <div className="space-y-1">
+                    {(editMode
+                      ? editedData?.urgentQueries
+                      : memoryData.urgentQueries
+                    )?.map((query, index) => (
+                      <div
+                        key={`urgent-${query.slice(0, 20).replace(/\s+/g, '-')}-${index}`}
+                        className="text-sm text-muted-foreground bg-orange-50 dark:bg-orange-950 p-2 rounded border-l-2 border-orange-300 dark:border-orange-700 group relative"
+                      >
+                        {query}
+                        {editMode && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDeleteItem('urgentQueries', index)
+                            }
+                            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
+              )}
             </>
           ) : (
             <div className="text-center py-8">

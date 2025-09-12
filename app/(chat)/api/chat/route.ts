@@ -15,7 +15,6 @@ import {
   getEnhancedContext,
   updateWebSearchTimestamp,
 } from '@/lib/ai/memory';
-import { needsWebSearch } from '@/lib/ai/web-search-utils';
 import { auth, type UserType } from '@/app/(auth)/auth';
 import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
 import {
@@ -30,14 +29,13 @@ import {
 import { convertToUIMessages, generateUUID } from '@/lib/utils';
 import { generateTitleFromUserMessage } from '../../actions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
-import { webSearch } from '@/lib/ai/tools/web-search';
+import { webSearch } from '@/lib/ai/tools/enhanced-web-search';
 import { localVectorSearch } from '@/lib/ai/tools/local-vector-search';
 import { isProductionEnvironment } from '@/lib/constants';
 import { myProvider } from '@/lib/ai/providers';
 import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from './schema';
 import { geolocation } from '@vercel/functions';
-import { after } from 'next/server';
 import { ChatSDKError } from '@/lib/errors';
 import type { ChatMessage } from '@/lib/types';
 import type { ChatModel } from '@/lib/ai/models';
@@ -141,13 +139,21 @@ export async function POST(request: Request) {
     const userMessage =
       message.parts?.find((part) => part.type === 'text')?.text || '';
 
-    const shouldUseWebSearch = needsWebSearch(userMessage, {
-      recentTopics: enhancedContext.recentTopics,
-      urgentQueries: conversationSummary?.urgentQueries,
+    // Use enhanced intent detection for web search decision
+    const { IntentClassifier } = await import('@/lib/ai/intent-classifier');
+    const intentClassifier = new IntentClassifier();
+
+    const userContext = {
+      preferences: {
+        careerField: userPreferences?.careerField,
+      },
+      conversationHistory: enhancedContext.recentTopics || [],
+      recentTopics: enhancedContext.recentTopics || [],
       lastWebSearch: enhancedContext.memory?.lastWebSearchTimestamp,
-      userPreferences,
-      conversationContext: enhancedContext.recentTopics || [],
-    });
+    };
+
+    const intent = intentClassifier.classifyIntent(userMessage, userContext);
+    const shouldUseWebSearch = intent.searchStrategy.priority !== 'skip';
 
     // Enhanced system prompt with contextual intelligence
     const enhancedRequestHints = {

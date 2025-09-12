@@ -20,24 +20,28 @@ function PureSuggestedActions({
 }: SuggestedActionsProps) {
   const suggestedActions = [
     {
-      title: 'What are the advantages',
-      label: 'of using Next.js?',
-      action: 'What are the advantages of using Next.js?',
+      title: 'Help me compare',
+      label: 'living costs in different cities',
+      action:
+        'Help me compare the cost of living between New York City, Austin, and Denver for a software engineer making $120k annually.',
     },
     {
-      title: 'Write code to',
-      label: `demonstrate djikstra's algorithm`,
-      action: `Write code to demonstrate djikstra's algorithm`,
+      title: 'What neighborhoods',
+      label: 'should I consider in Seattle?',
+      action:
+        'What are the best neighborhoods in Seattle for young professionals who want walkability and good restaurants?',
     },
     {
-      title: 'Help me write an essay',
-      label: `about silicon valley`,
-      action: `Help me write an essay about silicon valley`,
+      title: 'Create a relocation',
+      label: 'timeline and checklist',
+      action:
+        'Create a comprehensive relocation timeline and checklist for moving from California to North Carolina in 3 months.',
     },
     {
-      title: 'What is the weather',
-      label: 'in San Francisco?',
-      action: 'What is the weather in San Francisco?',
+      title: 'Find job markets',
+      label: 'for tech professionals',
+      action:
+        'What cities have the strongest job markets for software developers and data scientists right now?',
     },
   ];
 

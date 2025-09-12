@@ -54,3 +54,30 @@ export async function GET() {
     );
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+    const updatedMemory = await request.json();
+
+    // Import updateMemoryData dynamically to avoid circular imports
+    const { updateMemoryData } = await import('@/lib/ai/memory');
+
+    // Update the memory data
+    await updateMemoryData(userId, updatedMemory);
+
+    return Response.json({ success: true });
+  } catch (error) {
+    console.error('Error updating memory data:', error);
+    return Response.json(
+      { error: 'Failed to update memory data' },
+      { status: 500 },
+    );
+  }
+}

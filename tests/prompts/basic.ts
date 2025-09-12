@@ -33,15 +33,6 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
       },
     ],
   },
-  USER_TEXT_ARTIFACT: {
-    role: 'user',
-    content: [
-      {
-        type: 'text',
-        text: 'Help me write an essay about Silicon Valley',
-      },
-    ],
-  },
   CREATE_DOCUMENT_TEXT_CALL: {
     role: 'user',
     content: [

@@ -423,3 +423,53 @@ Now provide a better response that acknowledges their previous context and prefe
     return originalResponse;
   }
 }
+
+/**
+ * Update memory data manually from the UI
+ */
+export async function updateMemoryData(userId: string, memoryData: any) {
+  try {
+    // Update conversation summary
+    if (memoryData.summary) {
+      const updatedSummary: ConversationSummary = {
+        summary: memoryData.summary,
+        lastUpdated: new Date(),
+        messageCount: memoryData.messageCount || 0,
+        keyTopics: memoryData.keyTopics || [],
+        urgentQueries: memoryData.urgentQueries || [],
+        locationContext: memoryData.locationContext || [],
+      };
+      summaries.set(userId, updatedSummary);
+    }
+
+    // Update user preferences
+    if (memoryData.userPreferences) {
+      const updatedPreferences: UserPreferences = {
+        careerField: memoryData.userPreferences.careerField,
+        workSetup: memoryData.userPreferences.workSetup,
+        budget: memoryData.userPreferences.budget,
+        discussedCities: memoryData.userPreferences.discussedCities,
+        // Keep other existing preferences that aren't editable in UI
+        ...userPreferences.get(userId),
+        // Override with new values
+        ...memoryData.userPreferences,
+      };
+      userPreferences.set(userId, updatedPreferences);
+    }
+
+    // Update contextual memory
+    const existingContextual = contextualMemories.get(userId);
+    if (existingContextual) {
+      existingContextual.conversationSummary =
+        summaries.get(userId) || existingContextual.conversationSummary;
+      existingContextual.userProfile =
+        userPreferences.get(userId) || existingContextual.userProfile;
+      contextualMemories.set(userId, existingContextual);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error updating memory data:', error);
+    throw new Error('Failed to update memory data');
+  }
+}

@@ -1,0 +1,166 @@
+﻿# Relocation Chatbot - Complete Architecture Documentation
+
+## Project Overview
+- **Purpose**: AI-powered chatbot to help users with city relocation decisions
+- **Framework**: Next.js 15.3.0 with App Router
+- **Deployment**: Vercel (production)
+- **Database**: PostgreSQL with Neon (cloud)
+- **AI Model**: Google Gemini 1.5 Flash (primary)
+- **Memory System**: Local vector search with hash-based embeddings
+
+## Core Architecture
+
+### Frontend Stack
+- **Framework**: Next.js 15.3.0-canary.31 with Turbopack
+- **UI Components**: Radix UI + Tailwind CSS + Shadcn/ui
+- **Styling**: Tailwind CSS with custom theme support
+- **Icons**: Lucide React icons
+- **Animations**: Framer Motion for smooth interactions
+- **State Management**: SWR for data fetching, React hooks for local state
+
+### Backend Infrastructure
+- **Runtime**: Node.js on Vercel serverless functions
+- **Database**: PostgreSQL via Neon with Drizzle ORM
+- **Authentication**: NextAuth.js v5 (beta) with credentials provider
+- **File Storage**: Vercel Blob for attachments
+- **Monitoring**: Vercel Analytics + OpenTelemetry integration
+
+### AI & Language Models
+- **Primary Model**: Google Gemini 1.5 Flash via AI SDK
+- **Provider System**: Custom abstraction layer for model switching
+- **Streaming**: Real-time response streaming with tool usage
+- **Tools Available**: Weather API, Web search, Local vector search, Memory management
+
+### Database Schema Structure
+`
+Users Table: Authentication and profile data
+Chats Table: Conversation containers with visibility settings
+Messages Table: Individual chat messages with metadata
+UserMemory Table: Hierarchical memory system (preferences, facts, summaries)
+Votes Table: Message rating system
+Stream Table: Temporary streaming state management
+`
+
+### Memory System Architecture
+- **Short-term Memory**: Recent conversation context (sliding window)
+- **Long-term Memory**: User preferences, city comparisons, stable facts
+- **Vector Storage**: Hash-based embeddings in PostgreSQL
+- **Memory Types**: Preferences, facts, summaries, comparisons
+- **Retrieval**: Similarity search using cosine similarity on hash embeddings
+
+## Current Processing Flow
+
+### Message Processing Pipeline
+1. **Input Validation**: Rate limiting, authentication, session management
+2. **Context Assembly**: Load user profile, preferences, recent messages
+3. **Tool Selection**: Determine which tools (web search, weather, memory) to use
+4. **AI Generation**: Stream response using selected context and tools
+5. **Memory Update**: Extract and store new preferences/facts from conversation
+6. **Response Delivery**: Real-time streaming to frontend with tool results
+
+### Web Search Logic
+- **Trigger Detection**: Keyword-based detection for factual queries
+- **Search Execution**: External API for current information
+- **Result Processing**: Filter and rank results for relevance
+- **Context Integration**: Merge search results with memory context
+
+### Memory Management
+- **Storage Strategy**: Store conversations as summaries and extracted preferences
+- **Retrieval Method**: Hash-based similarity search for relevant context
+- **Update Logic**: Extract new information after each conversation
+- **Cleanup**: Automatic pruning of outdated or irrelevant memories
+
+## Tool System
+
+### Available Tools
+1. **Weather Tool**: Real-time weather data for location-based queries
+2. **Web Search Tool**: External search for current facts and trends
+3. **Local Vector Search**: Memory retrieval using stored embeddings
+4. **Memory Update Tool**: Extract and store user preferences/facts
+
+### Tool Selection Logic
+- Weather: Triggered by location + weather keywords
+- Web Search: Factual queries, current events, real-time data needs
+- Memory Search: Always active for context retrieval
+- Conditional execution based on query analysis and user history
+
+## Authentication & Security
+- **Auth Provider**: NextAuth.js with custom credentials
+- **Session Management**: JWT tokens with secure HTTP-only cookies
+- **Rate Limiting**: Request throttling per user/IP
+- **Data Privacy**: User data isolation, secure password hashing
+- **Guest Access**: Optional anonymous usage with limited features
+
+## File Structure & Organization
+`
+app/
+  (auth)/ - Authentication pages and logic
+  (chat)/ - Main chat interface and API routes
+components/ - Reusable UI components
+lib/
+  ai/ - AI model providers, tools, memory system
+  db/ - Database schema, queries, migrations
+  utils/ - Utility functions and helpers
+hooks/ - Custom React hooks
+public/ - Static assets
+`
+
+## Current Limitations & Technical Debt
+1. **Memory System**: Simple hash embeddings, lacks sophisticated ranking
+2. **Token Usage**: Not optimally managed, could be more efficient
+3. **Web Search**: Keyword-based triggering, misses conversational queries
+4. **Context Assembly**: Basic concatenation, could be smarter
+5. **Error Handling**: Basic error boundaries, could be more robust
+
+## Planned Optimizations
+
+### Phase 1: Core Logic Improvements
+- Parallel processing pipeline for faster responses
+- Intent-based routing for better tool selection
+- Progressive enhancement (memory first, web search if needed)
+- Improved context assembly with ranking and filtering
+
+### Phase 2: Memory System Upgrade
+- Replace hash embeddings with proper vector embeddings
+- Hierarchical memory structure (short/medium/long-term)
+- Better similarity search and context ranking
+- Automatic memory consolidation and pruning
+
+### Phase 3: Token Optimization
+- Smart context window management
+- Selective tool usage based on confidence scores
+- Response caching for similar queries
+- Compression techniques for large contexts
+
+### Future Considerations
+- Local model integration (Gemma 270M/3B) for reduced API costs
+- Advanced RAG pipeline with query rewriting
+- Multi-modal support (images, documents)
+- Real-time collaboration features
+
+## Deployment & Operations
+- **Production**: Vercel with automatic deployments from main branch
+- **Database**: Neon PostgreSQL with connection pooling
+- **Environment Management**: Separate staging/production configurations
+- **Migration Strategy**: Safe database migrations for schema changes
+- **Monitoring**: Vercel analytics, error tracking, performance metrics
+
+## Development Workflow
+- **Version Control**: Git with feature branch workflow
+- **Code Quality**: ESLint, Biome for formatting, TypeScript for type safety
+- **Testing**: Playwright for E2E testing (partially implemented)
+- **Local Development**: Next.js dev server with hot reload
+- **Package Management**: pnpm for faster installs and better dependency management
+
+## Recent Major Changes
+- **Artifact System Removal**: Completely removed document generation and editing features
+- **Dependency Cleanup**: Removed unused packages (resumable-stream, pinecone, redis, xAI)
+- **Build Optimization**: Fixed Vercel deployment issues and build processes
+- **Safe Migration**: Implemented database migration strategy for production deployments
+
+## Success Metrics
+- **Response Time**: Average time to first token
+- **Token Efficiency**: Tokens used per conversation
+- **Memory Accuracy**: Relevance of retrieved context
+- **User Satisfaction**: Conversation quality and helpfulness
+- **System Reliability**: Uptime and error rates

@@ -152,43 +152,7 @@ export const getResponseChunksByPrompt = (
         usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
       },
     ];
-  } else if (compareMessages(recentMessage, TEST_PROMPTS.USER_TEXT_ARTIFACT)) {
-    const toolCallId = generateId();
-
-    return [
-      {
-        id: toolCallId,
-        type: 'tool-input-start',
-        toolName: 'createDocument',
-      },
-      {
-        id: toolCallId,
-        type: 'tool-input-delta',
-        delta: JSON.stringify({
-          title: 'Essay about Silicon Valley',
-          kind: 'text',
-        }),
-      },
-      {
-        id: toolCallId,
-        type: 'tool-input-end',
-      },
-      {
-        toolCallId: toolCallId,
-        type: 'tool-result',
-        toolName: 'createDocument',
-        result: {
-          id: 'doc_123',
-          title: 'Essay about Silicon Valley',
-          kind: 'text',
-        },
-      },
-      {
-        type: 'finish',
-        finishReason: 'stop',
-        usage: { inputTokens: 3, outputTokens: 10, totalTokens: 13 },
-      },
-    ];
+    // Artifact functionality removed
   } else if (
     compareMessages(recentMessage, TEST_PROMPTS.CREATE_DOCUMENT_TEXT_CALL)
   ) {

@@ -27,7 +27,7 @@ export interface UserPreferences {
   dealBreakers?: string[];
   // Indian-specific preferences
   languagePreferences?: string[]; // Hindi, English, regional languages
-  regionalPreferences?: string[]; // North India, South India, West India, East India  
+  regionalPreferences?: string[]; // North India, South India, West India, East India
   climatePreferences?: string[]; // Monsoon tolerance, temperature preferences
   culturalFit?: string[]; // Traditional, cosmopolitan, local culture importance
   itHubPreferences?: string[]; // Electronic City, Gurgaon, HITEC City, etc.

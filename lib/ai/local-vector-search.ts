@@ -136,43 +136,81 @@ export async function initializeKnowledgeBase(): Promise<void> {
   const basicCityData = [
     {
       content:
-        'Bangalore (Bengaluru) is India\'s Silicon Valley with major tech companies like Infosys, Wipro, and TCS. Pleasant climate year-round, great pubs and restaurants, traffic congestion issues, average rent for 2BHK is ₹25,000-40,000. IT hubs: Electronic City, Whitefield, Koramangala.',
-      metadata: { city: 'Bangalore', category: 'overview', state: 'Karnataka', country: 'India' },
+        "Bangalore (Bengaluru) is India's Silicon Valley with major tech companies like Infosys, Wipro, and TCS. Pleasant climate year-round, great pubs and restaurants, traffic congestion issues, average rent for 2BHK is ₹25,000-40,000. IT hubs: Electronic City, Whitefield, Koramangala.",
+      metadata: {
+        city: 'Bangalore',
+        category: 'overview',
+        state: 'Karnataka',
+        country: 'India',
+      },
     },
     {
       content:
-        'Mumbai is India\'s financial capital with major banks, Bollywood, and corporate headquarters. Very expensive housing with 1BHK costing ₹30,000-60,000, excellent local trains, fast-paced lifestyle, monsoon rains, and diverse opportunities across industries.',
-      metadata: { city: 'Mumbai', category: 'overview', state: 'Maharashtra', country: 'India' },
+        "Mumbai is India's financial capital with major banks, Bollywood, and corporate headquarters. Very expensive housing with 1BHK costing ₹30,000-60,000, excellent local trains, fast-paced lifestyle, monsoon rains, and diverse opportunities across industries.",
+      metadata: {
+        city: 'Mumbai',
+        category: 'overview',
+        state: 'Maharashtra',
+        country: 'India',
+      },
     },
     {
       content:
         'Delhi NCR (including Gurgaon and Noida) offers government jobs, corporates, startups, extreme weather (hot summers, cold winters), pollution concerns, good metro connectivity, 2BHK rent ₹20,000-35,000, rich history and culture.',
-      metadata: { city: 'Delhi', category: 'overview', state: 'Delhi', country: 'India' },
+      metadata: {
+        city: 'Delhi',
+        category: 'overview',
+        state: 'Delhi',
+        country: 'India',
+      },
     },
     {
       content:
         'Pune has a growing IT sector, pleasant weather, lower cost of living than Mumbai/Bangalore, good educational institutions, 2BHK rent ₹18,000-30,000, IT hubs in Hinjewadi and Magarpatta, and proximity to hill stations.',
-      metadata: { city: 'Pune', category: 'overview', state: 'Maharashtra', country: 'India' },
+      metadata: {
+        city: 'Pune',
+        category: 'overview',
+        state: 'Maharashtra',
+        country: 'India',
+      },
     },
     {
       content:
         'Hyderabad (Cyberabad) has booming IT industry with Microsoft, Google offices, moderate cost of living, biryani culture, HITEC City tech hub, 2BHK rent ₹15,000-25,000, good infrastructure development, and Telangana government support for IT.',
-      metadata: { city: 'Hyderabad', category: 'overview', state: 'Telangana', country: 'India' },
+      metadata: {
+        city: 'Hyderabad',
+        category: 'overview',
+        state: 'Telangana',
+        country: 'India',
+      },
     },
     {
       content:
         'Chennai has strong automotive and IT industries, hot and humid climate, Tamil culture, Marina Beach, 2BHK rent ₹15,000-28,000, IT corridor in OMR (Old Mahabalipuram Road), and good south Indian food scene.',
-      metadata: { city: 'Chennai', category: 'overview', state: 'Tamil Nadu', country: 'India' },
+      metadata: {
+        city: 'Chennai',
+        category: 'overview',
+        state: 'Tamil Nadu',
+        country: 'India',
+      },
     },
     {
       content:
         'Remote work is growing in India with opportunities in tech, marketing, content writing, design, and consulting. Consider internet reliability (fiber broadband), power backup, and home office space. Tier-2 cities offer lower costs for remote workers.',
-      metadata: { category: 'remote-work', topic: 'opportunities', country: 'India' },
+      metadata: {
+        category: 'remote-work',
+        topic: 'opportunities',
+        country: 'India',
+      },
     },
     {
       content:
         'When relocating within India, consider job market, cost of living, language barriers, climate (monsoon patterns), commute options, school quality for children, healthcare facilities, and cultural fit. Research local festivals and food preferences.',
-      metadata: { category: 'relocation-tips', topic: 'evaluation', country: 'India' },
+      metadata: {
+        category: 'relocation-tips',
+        topic: 'evaluation',
+        country: 'India',
+      },
     },
     {
       content:

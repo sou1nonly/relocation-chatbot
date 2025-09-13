@@ -16,15 +16,21 @@ export interface UserPreferences {
   lifestyleNeeds?: string[];
   familyRequirements?: string[];
   housingConstraints?: string;
-  budget?: string;
-  discussedCities?: string[];
+  budget?: string; // Budget in INR (lakhs/thousands)
+  discussedCities?: string[]; // Indian cities
   transportationConcerns?: string[];
   workSetup?: string;
   costOfLivingPreferences?: string[];
-  preferredNeighborhoods?: string[];
+  preferredNeighborhoods?: string[]; // Indian localities/areas
   timeframe?: string;
   mustHaveAmenities?: string[];
   dealBreakers?: string[];
+  // Indian-specific preferences
+  languagePreferences?: string[]; // Hindi, English, regional languages
+  regionalPreferences?: string[]; // North India, South India, West India, East India  
+  climatePreferences?: string[]; // Monsoon tolerance, temperature preferences
+  culturalFit?: string[]; // Traditional, cosmopolitan, local culture importance
+  itHubPreferences?: string[]; // Electronic City, Gurgaon, HITEC City, etc.
 }
 
 export interface ContextualMemory {
@@ -67,32 +73,34 @@ You are an AI assistant specializing in city relocation analysis. Extract action
 Extract and structure:
 1. CORE USER PROFILE:
    - Career field, job level, industry
-   - Family situation (single, married, kids, pets)
+   - Family situation (single, married, kids, dependents)
    - Age range and lifestyle preferences
-   - Remote/hybrid/in-office work setup
+   - Remote/hybrid/in-office work setup in Indian context
 
-2. RELOCATION CRITERIA:
-   - Budget constraints (housing, overall COL)
-   - Preferred city size and characteristics
-   - Must-have amenities and features
-   - Deal-breakers and concerns
-   - Timeline for moving
+2. INDIAN RELOCATION CRITERIA:
+   - Budget constraints (housing in INR, overall cost of living)
+   - Preferred city size (metro/tier-1/tier-2) and characteristics
+   - Language preferences and regional cultural fit
+   - Must-have amenities (metro connectivity, IT parks proximity, schools)
+   - Climate preferences (monsoon tolerance, temperature preferences)
+   - Timeline for moving (avoiding monsoon season if needed)
 
-3. DISCUSSED LOCATIONS:
-   - Cities mentioned positively
-   - Cities mentioned negatively
-   - Specific neighborhoods or areas
-   - Comparison criteria used
+3. DISCUSSED INDIAN LOCATIONS:
+   - Indian cities mentioned positively (Bangalore, Mumbai, Delhi, Pune, etc.)
+   - Cities mentioned negatively with reasons
+   - Specific areas or IT hubs (Electronic City, Gurgaon, etc.)
+   - Comparison criteria used (cost, climate, job market, culture)
 
 4. URGENT/RECENT QUERIES:
    - Time-sensitive questions asked
-   - Real-time information needs
-   - Immediate concerns or priorities
+   - Real-time information needs about Indian cities
+   - Immediate concerns or priorities for Indian relocation
 
-5. ADAPTIVE CONTEXT:
-   - Recurring topics or concerns
-   - Information gaps that need filling
-   - User's decision-making style
+5. INDIAN CONTEXT ADAPTIVE:
+   - Regional preferences (North vs South India)
+   - Language comfort levels
+   - Monsoon and festival timing considerations
+   - IT job market and startup ecosystem preferences
 
 Conversation:
 ${conversationText}

@@ -41,3 +41,8 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /playwright/*
+
+# Documentation and backup files
+info.txt
+info_backup.txt
+backend.py

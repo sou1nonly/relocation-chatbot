@@ -21,27 +21,27 @@ function PureSuggestedActions({
   const suggestedActions = [
     {
       title: 'Help me compare',
-      label: 'living costs in different cities',
+      label: 'living costs between Indian cities',
       action:
-        'Help me compare the cost of living between New York City, Austin, and Denver for a software engineer making $120k annually.',
+        'Help me compare the cost of living between Bangalore, Mumbai, and Pune for a software engineer earning ₹15 LPA.',
     },
     {
-      title: 'What neighborhoods',
-      label: 'should I consider in Seattle?',
+      title: 'What areas',
+      label: 'should I consider in Bangalore?',
       action:
-        'What are the best neighborhoods in Seattle for young professionals who want walkability and good restaurants?',
+        'What are the best areas in Bangalore for IT professionals who want good connectivity to tech parks and reasonable rent?',
     },
     {
       title: 'Create a relocation',
-      label: 'timeline and checklist',
+      label: 'plan for moving within India',
       action:
-        'Create a comprehensive relocation timeline and checklist for moving from California to North Carolina in 3 months.',
+        'Create a comprehensive relocation plan for moving from Delhi to Hyderabad for a new job opportunity.',
     },
     {
-      title: 'Find job markets',
-      label: 'for tech professionals',
+      title: 'Find job opportunities',
+      label: 'in Indian tech hubs',
       action:
-        'What cities have the strongest job markets for software developers and data scientists right now?',
+        'Which Indian cities have the best job opportunities for software developers and data scientists in 2025?',
     },
   ];
 
